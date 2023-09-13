@@ -13,7 +13,7 @@ export default async function HomePage() {
 
   return (
     <section>
-      <h1>Keystone 🤝 Next.js</h1>
+      <h1 className='text-3xl font-bold underline text-pink-500'>Keystone 🤝 Next.js</h1>
       <ul>
         <li>Below you can see the names of users in the database.</li>
       </ul>

@@ -5,7 +5,9 @@ Welcome to Keystone!
 Run
 
 ```
-yarn dev
+nvm use 16
+yarn keystone:dev
+yarn next:dev
 ```
 
 To view the config for your new app, look at [./keystone.ts](./keystone.ts)
