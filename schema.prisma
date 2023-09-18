@@ -17,6 +17,48 @@ model User {
   about     String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   email     String    @unique @default("")
   password  String?
+  tags      Tag[]     @relation("Tag_users")
   isAdmin   Boolean   @default(false)
   createdAt DateTime? @default(now())
+}
+
+model Page {
+  id             String    @id @default(cuid())
+  name           String    @default("")
+  content        String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  createdAt      DateTime? @default(now())
+  from_Link_page Link[]    @relation("Link_page")
+}
+
+model Block {
+  id              String    @id @default(cuid())
+  name            String    @default("")
+  content         String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  createdAt       DateTime? @default(now())
+  from_Link_block Link[]    @relation("Link_block")
+}
+
+model Menu {
+  id    String @id @default(cuid())
+  name  String @default("")
+  links String @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
+model Link {
+  id        String  @id @default(cuid())
+  name      String  @default("")
+  sortOrder Int?
+  page      Page?   @relation("Link_page", fields: [pageId], references: [id])
+  pageId    String? @map("page")
+  block     Block?  @relation("Link_block", fields: [blockId], references: [id])
+  blockId   String? @map("block")
+
+  @@index([pageId])
+  @@index([blockId])
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @default("")
+  users User[] @relation("Tag_users")
 }

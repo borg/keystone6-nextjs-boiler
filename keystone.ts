@@ -8,9 +8,9 @@
 import { config } from '@keystone-6/core';
 
 // to keep this file tidy, we define our schema in a different file
-import { lists } from './src/keystone/schema';
+import { lists } from './keystone/schema';
 
-import { seedDemoData } from './src/keystone/seed';
+import { seedDemoData } from './keystone/seed';
 import type { Context } from '.keystone/types';
 
 // authentication is configured separately here too, but you might move this elsewhere

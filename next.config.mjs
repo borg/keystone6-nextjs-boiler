@@ -1,5 +1,6 @@
 // you don't need this if you're building something outside of the Keystone repo
 import withPreconstruct from "@preconstruct/next";
+import path from "path";
 
 export default withPreconstruct({
   experimental: {
@@ -13,5 +14,8 @@ export default withPreconstruct({
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  sassOptions: {
+    //includePaths: [path.join(__dirname, "styles")],
   },
 });

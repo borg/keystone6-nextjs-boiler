@@ -1,7 +1,9 @@
-import React from 'react';
+import React,{ReactNode} from 'react';
 import '../styles/globals.css';
+import {Menu} from './Menu';
+import Link from "next/link";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html>
       <head>
@@ -13,14 +15,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <div className="container">
-          <div
-            style={{
-              padding: '0 2rem',
-            }}
-          >
-            <main style={{ display: 'flex', justifyContent: 'center' }}>{children}</main>
-          </div>
+        <div className="container mx-auto px-4">
+            <Link href='/'>Home</Link>
+            <Menu name='main'/>
+            <main>{children}</main>
+
         </div>
       </body>
     </html>

@@ -7,6 +7,8 @@ type User {
   about: User_about_Document
   email: String
   password: PasswordState
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
   isAdmin: Boolean
   createdAt: DateTime
 }
@@ -34,6 +36,7 @@ input UserWhereInput {
   name: StringFilter
   email: StringFilter
   password: PasswordFilter
+  tags: TagManyRelationFilter
   isAdmin: BooleanFilter
   createdAt: DateTimeNullableFilter
 }
@@ -81,6 +84,12 @@ input PasswordFilter {
   isSet: Boolean!
 }
 
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
+}
+
 input BooleanFilter {
   equals: Boolean
   not: BooleanFilter
@@ -115,8 +124,16 @@ input UserUpdateInput {
   about: JSON
   email: String
   password: String
+  tags: TagRelateToManyForUpdateInput
   isAdmin: Boolean
   createdAt: DateTime
+}
+
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -129,8 +146,289 @@ input UserCreateInput {
   about: JSON
   email: String
   password: String
+  tags: TagRelateToManyForCreateInput
   isAdmin: Boolean
   createdAt: DateTime
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+type Page {
+  id: ID!
+  name: String
+  content: Page_content_Document
+  createdAt: DateTime
+}
+
+type Page_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input PageWhereUniqueInput {
+  id: ID
+}
+
+input PageWhereInput {
+  AND: [PageWhereInput!]
+  OR: [PageWhereInput!]
+  NOT: [PageWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input PageOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  createdAt: OrderDirection
+}
+
+input PageUpdateInput {
+  name: String
+  content: JSON
+  createdAt: DateTime
+}
+
+input PageUpdateArgs {
+  where: PageWhereUniqueInput!
+  data: PageUpdateInput!
+}
+
+input PageCreateInput {
+  name: String
+  content: JSON
+  createdAt: DateTime
+}
+
+type Block {
+  id: ID!
+  name: String
+  content: Block_content_Document
+  createdAt: DateTime
+}
+
+type Block_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input BlockWhereUniqueInput {
+  id: ID
+}
+
+input BlockWhereInput {
+  AND: [BlockWhereInput!]
+  OR: [BlockWhereInput!]
+  NOT: [BlockWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input BlockOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  createdAt: OrderDirection
+}
+
+input BlockUpdateInput {
+  name: String
+  content: JSON
+  createdAt: DateTime
+}
+
+input BlockUpdateArgs {
+  where: BlockWhereUniqueInput!
+  data: BlockUpdateInput!
+}
+
+input BlockCreateInput {
+  name: String
+  content: JSON
+  createdAt: DateTime
+}
+
+type Menu {
+  id: ID!
+  name: String
+  links: Menu_links_Document
+}
+
+type Menu_links_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input MenuWhereUniqueInput {
+  id: ID
+}
+
+input MenuWhereInput {
+  AND: [MenuWhereInput!]
+  OR: [MenuWhereInput!]
+  NOT: [MenuWhereInput!]
+  id: IDFilter
+  name: StringFilter
+}
+
+input MenuOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input MenuUpdateInput {
+  name: String
+  links: JSON
+}
+
+input MenuUpdateArgs {
+  where: MenuWhereUniqueInput!
+  data: MenuUpdateInput!
+}
+
+input MenuCreateInput {
+  name: String
+  links: JSON
+}
+
+type Link {
+  id: ID!
+  name: String
+  sortOrder: Int
+  page: Page
+  block: Block
+}
+
+input LinkWhereUniqueInput {
+  id: ID
+}
+
+input LinkWhereInput {
+  AND: [LinkWhereInput!]
+  OR: [LinkWhereInput!]
+  NOT: [LinkWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  sortOrder: IntNullableFilter
+  page: PageWhereInput
+  block: BlockWhereInput
+}
+
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
+}
+
+input LinkOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  sortOrder: OrderDirection
+}
+
+input LinkUpdateInput {
+  name: String
+  sortOrder: Int
+  page: PageRelateToOneForUpdateInput
+  block: BlockRelateToOneForUpdateInput
+}
+
+input PageRelateToOneForUpdateInput {
+  create: PageCreateInput
+  connect: PageWhereUniqueInput
+  disconnect: Boolean
+}
+
+input BlockRelateToOneForUpdateInput {
+  create: BlockCreateInput
+  connect: BlockWhereUniqueInput
+  disconnect: Boolean
+}
+
+input LinkUpdateArgs {
+  where: LinkWhereUniqueInput!
+  data: LinkUpdateInput!
+}
+
+input LinkCreateInput {
+  name: String
+  sortOrder: Int
+  page: PageRelateToOneForCreateInput
+  block: BlockRelateToOneForCreateInput
+}
+
+input PageRelateToOneForCreateInput {
+  create: PageCreateInput
+  connect: PageWhereUniqueInput
+}
+
+input BlockRelateToOneForCreateInput {
+  create: BlockCreateInput
+  connect: BlockWhereUniqueInput
+}
+
+type Tag {
+  id: ID!
+  name: String
+  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  usersCount(where: UserWhereInput! = {}): Int
+}
+
+input TagWhereUniqueInput {
+  id: ID
+}
+
+input TagWhereInput {
+  AND: [TagWhereInput!]
+  OR: [TagWhereInput!]
+  NOT: [TagWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  users: UserManyRelationFilter
+}
+
+input UserManyRelationFilter {
+  every: UserWhereInput
+  some: UserWhereInput
+  none: UserWhereInput
+}
+
+input TagOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input TagUpdateInput {
+  name: String
+  users: UserRelateToManyForUpdateInput
+}
+
+input UserRelateToManyForUpdateInput {
+  disconnect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input TagUpdateArgs {
+  where: TagWhereUniqueInput!
+  data: TagUpdateInput!
+}
+
+input TagCreateInput {
+  name: String
+  users: UserRelateToManyForCreateInput
+}
+
+input UserRelateToManyForCreateInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
 }
 
 """
@@ -145,6 +443,36 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createPage(data: PageCreateInput!): Page
+  createPages(data: [PageCreateInput!]!): [Page]
+  updatePage(where: PageWhereUniqueInput!, data: PageUpdateInput!): Page
+  updatePages(data: [PageUpdateArgs!]!): [Page]
+  deletePage(where: PageWhereUniqueInput!): Page
+  deletePages(where: [PageWhereUniqueInput!]!): [Page]
+  createBlock(data: BlockCreateInput!): Block
+  createBlocks(data: [BlockCreateInput!]!): [Block]
+  updateBlock(where: BlockWhereUniqueInput!, data: BlockUpdateInput!): Block
+  updateBlocks(data: [BlockUpdateArgs!]!): [Block]
+  deleteBlock(where: BlockWhereUniqueInput!): Block
+  deleteBlocks(where: [BlockWhereUniqueInput!]!): [Block]
+  createMenu(data: MenuCreateInput!): Menu
+  createMenus(data: [MenuCreateInput!]!): [Menu]
+  updateMenu(where: MenuWhereUniqueInput!, data: MenuUpdateInput!): Menu
+  updateMenus(data: [MenuUpdateArgs!]!): [Menu]
+  deleteMenu(where: MenuWhereUniqueInput!): Menu
+  deleteMenus(where: [MenuWhereUniqueInput!]!): [Menu]
+  createLink(data: LinkCreateInput!): Link
+  createLinks(data: [LinkCreateInput!]!): [Link]
+  updateLink(where: LinkWhereUniqueInput!, data: LinkUpdateInput!): Link
+  updateLinks(data: [LinkUpdateArgs!]!): [Link]
+  deleteLink(where: LinkWhereUniqueInput!): Link
+  deleteLinks(where: [LinkWhereUniqueInput!]!): [Link]
+  createTag(data: TagCreateInput!): Tag
+  createTags(data: [TagCreateInput!]!): [Tag]
+  updateTag(where: TagWhereUniqueInput!, data: TagUpdateInput!): Tag
+  updateTags(data: [TagUpdateArgs!]!): [Tag]
+  deleteTag(where: TagWhereUniqueInput!): Tag
+  deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -171,6 +499,21 @@ type Query {
   users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
+  pages(where: PageWhereInput! = {}, orderBy: [PageOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PageWhereUniqueInput): [Page!]
+  page(where: PageWhereUniqueInput!): Page
+  pagesCount(where: PageWhereInput! = {}): Int
+  blocks(where: BlockWhereInput! = {}, orderBy: [BlockOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BlockWhereUniqueInput): [Block!]
+  block(where: BlockWhereUniqueInput!): Block
+  blocksCount(where: BlockWhereInput! = {}): Int
+  menus(where: MenuWhereInput! = {}, orderBy: [MenuOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MenuWhereUniqueInput): [Menu!]
+  menu(where: MenuWhereUniqueInput!): Menu
+  menusCount(where: MenuWhereInput! = {}): Int
+  links(where: LinkWhereInput! = {}, orderBy: [LinkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LinkWhereUniqueInput): [Link!]
+  link(where: LinkWhereUniqueInput!): Link
+  linksCount(where: LinkWhereInput! = {}): Int
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  tag(where: TagWhereUniqueInput!): Tag
+  tagsCount(where: TagWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

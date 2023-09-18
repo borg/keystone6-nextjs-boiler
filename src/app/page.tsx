@@ -1,16 +1,13 @@
 import React from 'react';
-import { keystoneContext } from '../keystone/context';
+import { keystoneContext } from '../../keystone/context';
 import { DocumentRender } from './DocumentRender';
 
 export default async function HomePage() {
-  // WARNING: this does nothing for now
-  //   you will probably use getServerSession from 'next/auth'
-  //   https://next-auth.js.org/configuration/nextjs#in-app-directory
+
   const session = {};
   const users = await keystoneContext.withSession(session).query.User.findMany({
-    query: 'id name about { document }',
+    query: 'id name about { document } tags {name}',
   });
-
   return (
     <section>
       <h1 className='text-3xl font-bold underline text-pink-500'>Keystone 🤝 Next.js</h1>
@@ -23,10 +20,16 @@ export default async function HomePage() {
           <strong>Users fetched from the server</strong>
         </p>
         <ol>
-          {users.map(u => {
+          {
+           users.map(u => {
             return (
               <li key={u.id}>
-                <span>{u.name} </span>
+                <span className='text-xl' >{u.name} </span>
+                {
+                  u.tags.map((t,i)=>{
+                    return <span className='text-xs' key={i}>{t.name}</span>
+                  })
+                }
                 {u.about && (
                   <>
                     <hr />
@@ -35,28 +38,10 @@ export default async function HomePage() {
                 )}
               </li>
             );
-          })}
+          }) }
         </ol>
       </div>
 
-      <h2>How does it work?</h2>
-
-      <p>
-        Keystone's APIs can be seamlessly composed to work as a powerful data engine within Next.js
-        applications without having to host a separate Keystone server. This is made possible by
-        Keystone&apos;s `getContext` API.
-      </p>
-      <p>
-        <em>
-          Note: Since you are not starting the keystone server, the Admin UI will not be available.
-          You can host Keystone as a separate server if you need Admin UI.
-        </em>
-      </p>
-      <p>
-        <a href="https://github.com/keystonejs/keystone/tree/main/examples/framework-nextjs-app-directory">
-          Check out the example in the repo more info.
-        </a>
-      </p>
     </section>
   );
 }
