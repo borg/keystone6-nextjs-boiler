@@ -1,6 +1,10 @@
 import React from 'react';
 import { keystoneContext } from '../../../keystone/context';
 import { DocumentRenderer, DocumentRendererProps } from '@keystone-6/document-renderer';
+import lodash from 'lodash';
+import deepdash from 'deepdash';
+const _ = deepdash(lodash);
+
 
 const blocks = {};
 
@@ -11,14 +15,11 @@ const renderers: DocumentRendererProps['renderers'] = {
             if (!data || !blocks[data.id]) {
               return null;
             } else {
-               // console.log({block:blocks[data.id]});
-               // return <p>{JSON.stringify(blocks[data.id])}</p>
-              return <div id={blocks[data.id].name}><DocumentRenderer document={blocks[data.id].content.document} /></div>;
+              return <div id={blocks[data.id]?.name}><DocumentRenderer document={blocks[data.id]?.content?.document} /></div>;
             }
           }
           return null;
         },
-        
       },
       block: {
         paragraph: ({ children, textAlign }) => {
@@ -39,28 +40,14 @@ export default async function Page({params}:{params:{page:string}}) {
 
 
       //for some reason I cannot run hydrateRelationships without invoking server admin component
-      for(let p of pages){
-        for(let node of p.content.document){
-            if(node.type ==='layout'){
-                for(let child of node.children){
-                    for(let b of child.children){
-                        for(let c of b.children){
-                            if(c.relationship === 'block'){
-                                let block = await keystoneContext.withSession(session).query.Block.findOne({
-                                where:c.data,
-                                query: 'id name content {document }'});
-                                blocks[c.data.id] = block;
-                                
-                            }
-                        }
-                    }
-                }
-
-            }
-         
+      _.eachDeep(pages, async(value, key, parent, context) => {
+        if(key === 'relationship' && value ==='block'){
+            let block = await keystoneContext.withSession(session).query.Block.findOne({
+                where:parent.data,
+                query: 'id name content {document }'});
+                blocks[parent.data.id] = block
         }
-    }
-      
+      });
 
 
       if(pages.length){
