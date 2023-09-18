@@ -23,38 +23,23 @@ model User {
 }
 
 model Page {
-  id             String    @id @default(cuid())
-  name           String    @default("")
-  content        String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  createdAt      DateTime? @default(now())
-  from_Link_page Link[]    @relation("Link_page")
+  id        String    @id @default(cuid())
+  name      String    @default("")
+  content   String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  createdAt DateTime? @default(now())
 }
 
 model Block {
-  id              String    @id @default(cuid())
-  name            String    @default("")
-  content         String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  createdAt       DateTime? @default(now())
-  from_Link_block Link[]    @relation("Link_block")
+  id        String    @id @default(cuid())
+  name      String    @default("")
+  content   String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  createdAt DateTime? @default(now())
 }
 
 model Menu {
-  id    String @id @default(cuid())
-  name  String @default("")
-  links String @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-model Link {
-  id        String  @id @default(cuid())
-  name      String  @default("")
-  sortOrder Int?
-  page      Page?   @relation("Link_page", fields: [pageId], references: [id])
-  pageId    String? @map("page")
-  block     Block?  @relation("Link_block", fields: [blockId], references: [id])
-  blockId   String? @map("block")
-
-  @@index([pageId])
-  @@index([blockId])
+  id    String  @id @default(cuid())
+  name  String  @default("")
+  links String?
 }
 
 model Tag {

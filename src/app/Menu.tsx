@@ -31,15 +31,21 @@ export async function Menu({name}) {
   const session = {};
   const menus = await keystoneContext.withSession(session).query.Menu.findMany({
     where: { name: {equals:name} },
-    query: 'id name links  {document(hydrateRelationships: true)}',
+    query: 'id name links ',
   });
 
+  if(!menus.length){
+    return <p>Menu {name} missing</p>
+  }
 
   return (
     <section>
       <ul>
-        {menus.length &&
-            <DocumentRenderer document={menus[0].links?.document} renderers={renderers}/>
+        {menus[0].links.map((m, i)=>{
+           return <li key={i} className='capitalize'><Link href={`/${m.href}`} target={m.target?m.target:'_self'}>{m.label}</Link></li>
+        })
+           
+           
         }
       </ul>
     </section>

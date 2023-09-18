@@ -253,11 +253,7 @@ input BlockCreateInput {
 type Menu {
   id: ID!
   name: String
-  links: Menu_links_Document
-}
-
-type Menu_links_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
+  links: JSON
 }
 
 input MenuWhereUniqueInput {
@@ -290,87 +286,6 @@ input MenuUpdateArgs {
 input MenuCreateInput {
   name: String
   links: JSON
-}
-
-type Link {
-  id: ID!
-  name: String
-  sortOrder: Int
-  page: Page
-  block: Block
-}
-
-input LinkWhereUniqueInput {
-  id: ID
-}
-
-input LinkWhereInput {
-  AND: [LinkWhereInput!]
-  OR: [LinkWhereInput!]
-  NOT: [LinkWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  sortOrder: IntNullableFilter
-  page: PageWhereInput
-  block: BlockWhereInput
-}
-
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
-}
-
-input LinkOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  sortOrder: OrderDirection
-}
-
-input LinkUpdateInput {
-  name: String
-  sortOrder: Int
-  page: PageRelateToOneForUpdateInput
-  block: BlockRelateToOneForUpdateInput
-}
-
-input PageRelateToOneForUpdateInput {
-  create: PageCreateInput
-  connect: PageWhereUniqueInput
-  disconnect: Boolean
-}
-
-input BlockRelateToOneForUpdateInput {
-  create: BlockCreateInput
-  connect: BlockWhereUniqueInput
-  disconnect: Boolean
-}
-
-input LinkUpdateArgs {
-  where: LinkWhereUniqueInput!
-  data: LinkUpdateInput!
-}
-
-input LinkCreateInput {
-  name: String
-  sortOrder: Int
-  page: PageRelateToOneForCreateInput
-  block: BlockRelateToOneForCreateInput
-}
-
-input PageRelateToOneForCreateInput {
-  create: PageCreateInput
-  connect: PageWhereUniqueInput
-}
-
-input BlockRelateToOneForCreateInput {
-  create: BlockCreateInput
-  connect: BlockWhereUniqueInput
 }
 
 type Tag {
@@ -461,12 +376,6 @@ type Mutation {
   updateMenus(data: [MenuUpdateArgs!]!): [Menu]
   deleteMenu(where: MenuWhereUniqueInput!): Menu
   deleteMenus(where: [MenuWhereUniqueInput!]!): [Menu]
-  createLink(data: LinkCreateInput!): Link
-  createLinks(data: [LinkCreateInput!]!): [Link]
-  updateLink(where: LinkWhereUniqueInput!, data: LinkUpdateInput!): Link
-  updateLinks(data: [LinkUpdateArgs!]!): [Link]
-  deleteLink(where: LinkWhereUniqueInput!): Link
-  deleteLinks(where: [LinkWhereUniqueInput!]!): [Link]
   createTag(data: TagCreateInput!): Tag
   createTags(data: [TagCreateInput!]!): [Tag]
   updateTag(where: TagWhereUniqueInput!, data: TagUpdateInput!): Tag
@@ -508,9 +417,6 @@ type Query {
   menus(where: MenuWhereInput! = {}, orderBy: [MenuOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MenuWhereUniqueInput): [Menu!]
   menu(where: MenuWhereUniqueInput!): Menu
   menusCount(where: MenuWhereInput! = {}): Int
-  links(where: LinkWhereInput! = {}, orderBy: [LinkOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LinkWhereUniqueInput): [Link!]
-  link(where: LinkWhereUniqueInput!): Link
-  linksCount(where: LinkWhereInput! = {}): Int
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tag(where: TagWhereUniqueInput!): Tag
   tagsCount(where: TagWhereInput! = {}): Int

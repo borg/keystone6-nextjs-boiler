@@ -1,6 +1,6 @@
 import { list } from '@keystone-6/core';
 import { allowAll } from '@keystone-6/core/access';
-import { text,integer, timestamp,password,checkbox,relationship } from '@keystone-6/core/fields';
+import { text,integer, timestamp,password,checkbox,relationship,json } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import type { Lists } from '.keystone/types';
 import {componentBlocks} from './component-blocks';
@@ -68,7 +68,6 @@ export const lists: Lists = {
           },
         },
       }),
-      
       createdAt: timestamp({
         defaultValue: { kind: 'now' },
       }),
@@ -94,25 +93,15 @@ export const lists: Lists = {
     access: allowAll,
     fields: {
       name: text({ validation: { isRequired: true } }),
-      links: document({
-        relationships: {      
-          mention: {
-            listKey: 'Link',
-            label: 'Link',
-            selection: 'id name sortOrder page {id name} block {id name}',
-          },
+      links: json({
+        ui: {
+          views: './keystone/fields/related-links/components',
+          createView: { fieldMode: 'edit' },
+          listView: { fieldMode: 'hidden' },
+          itemView: { fieldMode: 'edit' },
         },
-      })
+      }),
     },
-  }),
-  Link:list({
-    access: allowAll,
-    fields:{
-      name:text(),
-      sortOrder: integer(),
-      page:relationship({ref:"Page",many:false}),
-      block:relationship({ref:"Block",many:false}),
-    }
   }),
   Tag: list({
     access: allowAll,

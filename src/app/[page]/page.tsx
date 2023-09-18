@@ -5,7 +5,7 @@ import lodash from 'lodash';
 import deepdash from 'deepdash';
 const _ = deepdash(lodash);
 
-
+//cannot hydrate for some reason, so I'm creating a nested LUT
 const blocks = {};
 
 const renderers: DocumentRendererProps['renderers'] = {
