@@ -4,7 +4,7 @@ import { FieldProps } from '@keystone-6/core/types';
 import { css } from '@emotion/css';
 import { Button } from '@keystone-ui/button';
 import { FieldContainer, FieldLabel, TextInput } from '@keystone-ui/fields';
-import { MinusCircleIcon, EditIcon } from '@keystone-ui/icons';
+import { MinusCircleIcon, EditIcon,ArrowDownCircleIcon, ArrowUpCircleIcon } from '@keystone-ui/icons';
 import { controller } from '@keystone-6/core/fields/types/json/views';
 import { Fragment, useState } from 'react';
 
@@ -118,6 +118,31 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
     setHrefValue('');
   };
 
+
+  function arraymove(arr:RelatedLink[], fromIndex:number, toIndex:number) {
+    var element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
+}
+
+
+  const onMoveDown = (index: number) => {
+    if (onChange && index<relatedLinks.length-1) {
+        const relatedLinksCopy = [...relatedLinks];
+        arraymove(relatedLinksCopy,index,index+1);
+        onChange(JSON.stringify(relatedLinksCopy));
+    }
+  };
+
+  const onMoveUp = (index: number) => {
+    if (onChange && index>0) {
+        const relatedLinksCopy = [...relatedLinks];
+        arraymove(relatedLinksCopy,index,index-1);
+        onChange(JSON.stringify(relatedLinksCopy));
+    }
+  };
+
+
   return (
     <FieldContainer>
       <FieldLabel>{field.label}</FieldLabel>
@@ -185,12 +210,27 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
               </div>
               {onChange && (
                 <div>
+                    <Button size="small" className={styles.list.optionButton}>
+                    <ArrowDownCircleIcon
+                      size="small"
+                      color="gray"
+                      onClick={() => onMoveDown(i)}
+                    />
+                  </Button>
+                  <Button size="small" className={styles.list.optionButton}>
+                    <ArrowUpCircleIcon
+                      size="small"
+                      color="gray"
+                      onClick={() => onMoveUp(i)}
+                    />
+                  </Button>
+
                   <Button
                     size="small"
                     onClick={() => onEditRelatedLink(i)}
                     className={styles.list.optionButton}
                   >
-                    <EditIcon size="small" color="blue" />
+                    <EditIcon size="small" color="gray" />
                   </Button>
                   <Button size="small" className={styles.list.optionButton}>
                     <MinusCircleIcon
